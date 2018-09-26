@@ -64,7 +64,7 @@ public class TicTacToeModel {
     
     /* CONSTRUCTOR */
     
-    public TicTacToeModel(int width) {
+     public TicTacToeModel(int width) {
         
         /* Initialize width; X goes first */
         
@@ -72,13 +72,16 @@ public class TicTacToeModel {
         xTurn = true;
         
         /* Create grid (width x width) as a 2D Mark array */
-
-        /* INSERT YOUR CODE HERE */
-
-        /* Initialize grid by filling every square with empty marks */
-
-        /* INSERT YOUR CODE HERE */
-        
+		
+		grid = new Mark[width][width];
+		
+		/* Initialize grid by filling every square with empty marks */
+		
+		for (int row = 0; row < width; row++) {		/*rows*/
+			for (int col = 0; col < width; col++) {	/*columns*/
+				grid[row][col] = Mark.EMPTY;
+			}
+		}
     }
 	
     public boolean makeMark(int row, int col) {
@@ -87,19 +90,41 @@ public class TicTacToeModel {
            location, but only if the location is valid and if the square is
            empty! */
         
-        /* INSERT YOUR CODE HERE */
-
-        return false; /* remove this line! */
-        
+		for (row = 0; row < width; row++) {		/*rows*/
+			for (col = 0; col < width; col++) {	/*columns*/
+					if (grid[row][col] == Mark.EMPTY && xTurn == true) {
+					grid[row][col] = Mark.X;
+				}
+				else {
+					grid[row][col] = Mark.O;
+				}
+			}
+		}
+		
+		
+		return true;
     }
 	
     private boolean isValidSquare(int row, int col) {
         
         /* Return true if specified location is within grid bounds */
         
-        /* INSERT YOUR CODE HERE */
-
-        return false; /* remove this line! */
+        if (row < width && col < width) {
+			grid[row][col] = Mark.O;
+		}
+		
+		for (row = 0; row < width; row++) {		/*rows*/
+			for (col = 0; col < width; col++) {	/*columns*/
+				if (row < width && col < width) {
+					grid[row][col] = Mark.X;
+				}
+				else {
+					grid[row][col] = Mark.O;
+				}
+			}
+		}
+		
+        return true;
         
     }
 	
@@ -107,9 +132,11 @@ public class TicTacToeModel {
         
         /* Return true if square at specified location is marked */
         
-        /* INSERT YOUR CODE HERE */
+        if(grid[row][col] != Mark.EMPTY) {
+			grid[row][col] = Mark.O;
+		}
 
-        return false; /* remove this line! */
+        return true;
             
     }
 	
@@ -117,9 +144,7 @@ public class TicTacToeModel {
         
         /* Return mark from the square at the specified location */
         
-        /* INSERT YOUR CODE HERE */
-
-        return null; /* remove this line! */
+        return grid[row][col];
             
     }
 	
@@ -135,14 +160,43 @@ public class TicTacToeModel {
 
     }
 	
-    private boolean isMarkWin(Mark mark) {
+    private boolean isMarkWin(Mark mark, int col, int row) {
         
         /* Check the squares of the board to see if the specified mark is the
            winner */
         
-        /* INSERT YOUR CODE HERE */
+		/*row*/
+		for (int i=0; i<width; i++){
+			if (grid[i][col] != Mark.EMPTY) {
+				return true;
+			}
+		}
+		/*col*/
+		for (int j=0; j<width; j++){
+			if (grid[row][j] != Mark.EMPTY) {
+				return true;
+			}
+		}
+		
+		/*diagonal*/
+		if(col == row){
+			for(int d=0; d<width; d++){
+				if(grid[d][d] != Mark.EMPTY){
+					return true;
+				}
+			}
+		}
+		
+		/*reverse diagonal*/
+		if(col+row == width -1){
+			for(int rd=0; rd<width; rd++){
+				if(grid[rd][(width-1)-rd] != Mark.EMPTY){
+					return true;
+				}
+			}
+		}
 
-        return false; /* remove this line! */
+		return true;
 
     }
 	
@@ -150,10 +204,14 @@ public class TicTacToeModel {
         
         /* Check the squares of the board to see if the game is a tie */
 
-        /* INSERT YOUR CODE HERE */
-
-        return false; /* remove this line! */
-        
+        for (int row = 0; row < width; row++) {		/*rows*/
+			for (int col = 0; col < width; col++) {	/*columns*/
+				if (grid[row][col] == Mark.X && grid[row][col] == Mark.O) {
+					return true;
+				}
+			}
+		}  
+		return true;
     }
 
     public boolean isGameover() {
